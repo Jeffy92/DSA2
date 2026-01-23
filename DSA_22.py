@@ -1,5 +1,5 @@
 import random
-import networkx
+import networkx as nx
 from typing import List, Tuple, Optional
 
 # Visualization (empty board and final board)
@@ -236,9 +236,11 @@ class UnionFind:
         return False
                 
 
+#MST Algorithm - Kruskal's Algorithm
+
 def MyMinimumSpanningTree(Graph) -> nx.Graph:
     """Kruskal's algorithm to find Minimum Spanning Tree of a connected, undirected, weighted graph."""
-    uf = UnionFind(Graph.nodes())
+    uf = UnionFind(list(Graph.nodes()))
     mst = nx.Graph()
     mst.add_nodes_from(Graph.nodes(data=True))
     #sort edges by weight
@@ -267,9 +269,55 @@ def MyMinimumSpanningTree(Graph) -> nx.Graph:
     print(f"Minimum Spanning Tree completed with total weight: {total_weight}\n")
     return mst
 
+#---build the 6 node, 10 edge graph---
+G1 = nx.Graph()
+G1.add_edge("A", "B", weight=4)
+G1.add_edge("A", "C", weight=3)
+G1.add_edge("B", "C", weight=1)
+G1.add_edge("B", "D", weight=2)
+G1.add_edge("C", "D", weight=4)
+G1.add_edge("D", "E", weight=2)
+G1.add_edge("E", "F", weight=6)
+G1.add_edge("D", "F", weight=3)
+G1.add_edge("B", "F", weight=7)
+G1.add_edge("C", "E", weight=5)
+
+print("MST 1 (6 node, 10 edge graph):")
+mst = MyMinimumSpanningTree(G1)
+print("MST edges:", mst.edges(data=True))
+
+#---build the 5 node, 8 edge graph (Test 2)---
+G2 = nx.Graph()
+G2.add_edge("A", "B", weight=4) 
+G2.add_edge("A", "C", weight=1) 
+G2.add_edge("A", "E", weight=5) 
+G2.add_edge("B", "C", weight=3) 
+G2.add_edge("B", "D", weight=2) 
+G2.add_edge("C", "D", weight=6) 
+G2.add_edge("C", "E", weight=4) 
+G2.add_edge("D", "E", weight=7)
+
+print("\nMST 2 (5 node, 8 edge graph):")
+mst = MyMinimumSpanningTree(G2)
+print("MST edges:", mst.edges(data=True))
+
+#---build the 5 node, 8 edge graph (Test 3)---
+G3 = nx.Graph()
+G3.add_edge("A", "B", weight=3) 
+G3.add_edge("A", "C", weight=5) 
+G3.add_edge("A", "D", weight=4) 
+G3.add_edge("B", "C", weight=2) 
+G3.add_edge("B", "E", weight=6) 
+G3.add_edge("C", "D", weight=1) 
+G3.add_edge("C", "E", weight=7) 
+G3.add_edge("D", "E", weight=3)
+
+print("\nMST 3 (5 node, 8 edge graph):")
+mst = MyMinimumSpanningTree(G3)
+print("MST edges:", mst.edges(data=True))
 
 
-# test graphs
+# MST graphs 1 with 6 nodes and 10 edges
 
 import networkx as nx
 import matplotlib.pyplot as plt 
@@ -277,16 +325,16 @@ def make_graph_1():
     """Create and return graph with 6 nodes and 10 edges."""
     G = nx.Graph()
     G.add_weighted_edges_from([
-        (0, 1, 4),
-        (0, 2, 3),
-        (1, 2, 1),
-        (1, 3, 2),
-        (2, 3, 4),
-        (3, 4, 2),
-        (4, 5, 6),
-        (3, 5, 3),
-        (1, 5, 7),
-        (2, 4, 5)
+        ("A", "B", 4),
+        ("A", "C", 3),
+        ("B", "C", 1),
+        ("B", "D", 2),
+        ("C", "D", 4),
+        ("D", "E", 2),
+        ("E", "F", 6),
+        ("D", "F", 3),
+        ("B", "F", 7),
+        ("C", "E", 5)
     ])
     return G
 
@@ -306,25 +354,64 @@ def main():
 if __name__ == "__main__":
     main() 
     
-    def make_graph_3():
+# MST graphs 2 with 5 nodes and 8 edges
+import networkx as nx
+import matplotlib.pyplot as plt    
+def make_graph_2():
     """Create and return graph with 5 nodes and 8 edges."""
     G = nx.Graph()
     G.add_weighted_edges_from([
-        (0, 1, 3),
-        (0, 2, 2),
-        (1, 2, 4),
-        (1, 3, 5),
-        (2, 3, 1),
-        (3, 4, 6),
-        (1, 4, 7),
-        (2, 4, 8)
+        ("A", "B", 4),
+        ("A", "C", 1),
+        ("A", "E", 5),
+        ("B", "C", 3),
+        ("B", "D", 2),
+        ("C", "D", 6),
+        ("C", "E", 4),
+        ("D", "E", 7)
+    ])
+    return G
+
+def draw_graph_2(G):
+    """Draw the graph with weights."""
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_color='orange', node_size=500, font_size=10)
+    labels = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+    plt.title("Connect graph with 5 nodes and 8 edges")
+    plt.show()
+    
+def main_2():
+    """Main function to create and draw the graph."""
+    G = make_graph_2()
+    draw_graph_2(G)
+if __name__ == "__main__":
+    main_2()
+    
+
+
+#MST graphs 3 with 5 nodes and 8 edges
+import networkx as nx
+import matplotlib.pyplot as plt    
+def make_graph_3():
+    """Create and return graph with 5 nodes and 8 edges."""
+    G = nx.Graph()
+    G.add_weighted_edges_from([
+        ("A", "B", 3),
+        ("A", "C", 5),
+        ("A", "D", 4),
+        ("B", "C", 2),
+        ("B", "E", 6),
+        ("C", "D", 1),
+        ("C", "E", 7),
+        ("D", "E", 3)
     ])
     return G
 
 def draw_graph_3(G):
     """Draw the graph with weights."""
     pos = nx.spring_layout(G)
-    nx.draw(G, pos, with_labels=True, node_color='orange', node_size=500, font_size=10)
+    nx.draw(G, pos, with_labels=True, node_color='pink', node_size=500, font_size=10)
     labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
     plt.title("Connect graph with 5 nodes and 8 edges")
@@ -337,7 +424,6 @@ def main_3():
 if __name__ == "__main__":
     main_3()
     
-
 
 
 
